@@ -498,8 +498,8 @@ type Icon msg
     Card.icon IconButton.config "favorite"
 
 -}
-icon : IconButton.Config msg -> String -> Icon msg
-icon (Material.IconButton.Internal.Config iconButtonConfig) iconName =
+icon : IconButton.Config msg -> IconButton.Icon -> Icon msg
+icon (Material.IconButton.Internal.Config iconButtonConfig) icon_ =
     Icon <|
         IconButton.iconButton
             (Material.IconButton.Internal.Config
@@ -510,4 +510,4 @@ icon (Material.IconButton.Internal.Config iconButtonConfig) iconName =
                             :: iconButtonConfig.additionalAttributes
                 }
             )
-            iconName
+            icon_

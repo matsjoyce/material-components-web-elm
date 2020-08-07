@@ -2,13 +2,16 @@ module Demo.IconButton exposing (Model, Msg(..), defaultModel, update, view)
 
 import Browser.Dom
 import Demo.CatalogPage exposing (CatalogPage)
+import Demo.ElmLogo exposing (elmLogo)
 import Html exposing (text)
-import Html.Attributes
+import Html.Attributes exposing (class, style)
 import Material.Button as Button
 import Material.IconButton as IconButton
 import Material.IconToggle as IconToggle
 import Material.Typography as Typography
 import Set exposing (Set)
+import Svg
+import Svg.Attributes
 import Task
 
 
@@ -70,7 +73,7 @@ view model =
         ]
     , content =
         [ Html.h3 [ Typography.subtitle1 ] [ text "Icon Button" ]
-        , IconButton.iconButton IconButton.config "wifi"
+        , IconButton.iconButton IconButton.config (IconButton.icon "wifi")
         , Html.h3 [ Typography.subtitle1 ] [ text "Icon Toggle" ]
         , IconToggle.iconToggle
             (IconToggle.config
@@ -80,13 +83,28 @@ view model =
             { offIcon = "favorite_border"
             , onIcon = "favorite"
             }
+        , Html.h3 [ Typography.subtitle1 ] [ text "Icon Button with Custom Icon" ]
+        , IconButton.iconButton IconButton.config (IconButton.icon "favorite")
+        , IconButton.iconButton IconButton.config
+            (IconButton.customIcon Html.i
+                [ class "fab fa-font-awesome"
+                , style "width" "24px"
+                , style "text-align" "center"
+                ]
+                []
+            )
+        , IconButton.iconButton IconButton.config
+            (IconButton.svgIcon
+                [ Svg.Attributes.viewBox "0 0 100 100" ]
+                elmLogo
+            )
         , Html.h3 [ Typography.subtitle1 ] [ text "Focus Icon Button" ]
         , Html.div []
             [ IconButton.iconButton
                 (IconButton.config
                     |> IconButton.setAttributes [ Html.Attributes.id "my-icon-button" ]
                 )
-                "wifi"
+                (IconButton.icon "wifi")
             , text "\u{00A0}"
             , Button.raised
                 (Button.config |> Button.setOnClick (Focus "my-icon-button"))
@@ -96,8 +114,8 @@ view model =
         , Html.div []
             [ IconToggle.iconToggle
                 (IconToggle.config
-                    |> IconToggle.setOn (Set.member "icon-button-toggle" model.ons)
-                    |> IconToggle.setOnChange (Toggle "icon-button-toggle")
+                    |> IconToggle.setOn (Set.member "my-icon-toggle" model.ons)
+                    |> IconToggle.setOnChange (Toggle "my-icon-toggle")
                     |> IconToggle.setAttributes [ Html.Attributes.id "my-icon-toggle" ]
                 )
                 { offIcon = "favorite_border"

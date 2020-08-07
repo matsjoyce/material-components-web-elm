@@ -1,6 +1,6 @@
-module Material.IconButton.Internal exposing (Config(..))
+module Material.IconButton.Internal exposing (Config(..), Icon(..))
 
-import Html
+import Html exposing (Html)
 
 
 type Config msg
@@ -10,3 +10,7 @@ type Config msg
         , additionalAttributes : List (Html.Attribute msg)
         , onClick : Maybe msg
         }
+
+
+type Icon
+    = Icon (Html Never)

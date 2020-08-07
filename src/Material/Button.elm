@@ -8,8 +8,8 @@ module Material.Button exposing
     , setTouch
     , setAttributes
     , text, outlined, raised, unelevated
-    , Icon
-    , icon, customIcon
+    , Icon, icon
+    , customIcon
     , svgIcon
     )
 
@@ -143,11 +143,11 @@ Note that link buttons cannot be disabled.
 
 ## Button with Custom Icon
 
-This library natively supports [Material Icon](https://material.io/icons),
-however you may also include SVG or custom icons such as FontAwesome.
+This library natively supports [Material Icons](https://material.io/icons).
+However, you may also include SVG or custom icons such as FontAwesome.
 
-@docs Icon
-@docs icon, customIcon
+@docs Icon, icon
+@docs customIcon
 @docs svgIcon
 
 
@@ -520,33 +520,6 @@ icon iconName =
             [ Html.text iconName ]
 
 
-{-| SVG icon
-
-    Button.raised
-        (Button.config
-            |> Button.setIcon
-                (Just
-                    (Button.svgIcon
-                        [ Svg.Attributes.viewBox "…" ]
-                        [-- …
-                        ]
-                    )
-                )
-        )
-        "SVG Icon"
-
--}
-svgIcon : List (Svg.Attribute Never) -> List (Svg Never) -> Icon
-svgIcon additionalAttributes nodes =
-    Icon <|
-        Svg.svg
-            (Svg.Attributes.class "mdc-button__icon"
-                :: Html.Attributes.attribute "aria-hidden" "true"
-                :: additionalAttributes
-            )
-            nodes
-
-
 {-| Custom icon
 
     Button.raised
@@ -571,6 +544,33 @@ customIcon node additionalAttributes nodes =
     Icon <|
         node
             (class "mdc-button__icon"
+                :: Html.Attributes.attribute "aria-hidden" "true"
+                :: additionalAttributes
+            )
+            nodes
+
+
+{-| SVG icon
+
+    Button.raised
+        (Button.config
+            |> Button.setIcon
+                (Just
+                    (Button.svgIcon
+                        [ Svg.Attributes.viewBox "…" ]
+                        [-- …
+                        ]
+                    )
+                )
+        )
+        "SVG Icon"
+
+-}
+svgIcon : List (Svg.Attribute Never) -> List (Svg Never) -> Icon
+svgIcon additionalAttributes nodes =
+    Icon <|
+        Svg.svg
+            (Svg.Attributes.class "mdc-button__icon"
                 :: Html.Attributes.attribute "aria-hidden" "true"
                 :: additionalAttributes
             )
