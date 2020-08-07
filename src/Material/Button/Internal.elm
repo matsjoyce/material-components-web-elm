@@ -1,11 +1,11 @@
-module Material.Button.Internal exposing (Config(..))
+module Material.Button.Internal exposing (Config(..), Icon(..))
 
-import Html
+import Html exposing (Html)
 
 
 type Config msg
     = Config
-        { icon : Maybe String
+        { icon : Maybe Icon
         , trailingIcon : Bool
         , disabled : Bool
         , dense : Bool
@@ -15,3 +15,7 @@ type Config msg
         , onClick : Maybe msg
         , touch : Bool
         }
+
+
+type Icon
+    = Icon (Html Never)
