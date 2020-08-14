@@ -307,10 +307,10 @@ filterChips2 model =
 actionChips : Model -> Html Msg
 actionChips model =
     let
-        chip ( icon, label ) =
+        chip ( iconName, label ) =
             ActionChip.chip
                 (ActionChip.config
-                    |> ActionChip.setIcon (Just icon)
+                    |> ActionChip.setIcon (Just (ActionChip.icon iconName))
                 )
                 label
     in

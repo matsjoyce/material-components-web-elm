@@ -1,11 +1,11 @@
-module Material.Chip.Action.Internal exposing (Chip(..), Config(..))
+module Material.Chip.Action.Internal exposing (Chip(..), Config(..), Icon(..))
 
-import Html
+import Html exposing (Html)
 
 
 type Config msg
     = Config
-        { icon : Maybe String
+        { icon : Maybe Icon
         , additionalAttributes : List (Html.Attribute msg)
         , onClick : Maybe msg
         }
@@ -13,3 +13,7 @@ type Config msg
 
 type Chip msg
     = Chip (Config msg) String
+
+
+type Icon
+    = Icon (Html Never)
