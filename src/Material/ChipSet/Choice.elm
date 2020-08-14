@@ -85,7 +85,7 @@ import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
 import Json.Encode as Encode
-import Material.Chip.Choice.Internal as Chip exposing (Chip(..))
+import Material.Chip.Choice.Internal as Chip exposing (Chip(..), Icon(..))
 
 
 {-| Configuration of a choice chip set
@@ -230,12 +230,12 @@ rippleElt =
 
 leadingIconElt : Chip.Config msg -> Maybe (Html msg)
 leadingIconElt (Chip.Config { icon }) =
-    Maybe.map
-        (\iconName ->
-            Html.i [ class "material-icons mdc-chip__icon mdc-chip__icon--leading" ]
-                [ text iconName ]
-        )
-        icon
+    case icon of
+        Just (Icon icon_) ->
+            Just (Html.map never icon_)
+
+        Nothing ->
+            Nothing
 
 
 primaryActionElt : String -> Maybe (Html msg)
