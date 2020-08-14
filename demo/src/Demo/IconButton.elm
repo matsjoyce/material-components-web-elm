@@ -67,8 +67,8 @@ view model =
                 |> IconToggle.setOn (Set.member "icon-button-hero" model.ons)
                 |> IconToggle.setOnChange (Toggle "icon-button-hero")
             )
-            { offIcon = "favorite_border"
-            , onIcon = "favorite"
+            { offIcon = IconToggle.icon "favorite_border"
+            , onIcon = IconToggle.icon "favorite"
             }
         ]
     , content =
@@ -80,8 +80,8 @@ view model =
                 |> IconToggle.setOn (Set.member "icon-button-toggle" model.ons)
                 |> IconToggle.setOnChange (Toggle "icon-button-toggle")
             )
-            { offIcon = "favorite_border"
-            , onIcon = "favorite"
+            { offIcon = IconToggle.icon "favorite_border"
+            , onIcon = IconToggle.icon "favorite"
             }
         , Html.h3 [ Typography.subtitle1 ] [ text "Icon Button with Custom Icon" ]
         , IconButton.iconButton IconButton.config (IconButton.icon "favorite")
@@ -98,6 +98,45 @@ view model =
                 [ Svg.Attributes.viewBox "0 0 100 100" ]
                 elmLogo
             )
+        , Html.h3 [ Typography.subtitle1 ] [ text "Icon Toggle with Custom Icon" ]
+        , IconToggle.iconToggle
+            (IconToggle.config
+                |> IconToggle.setOn (Set.member "custom-icon-toggle-1" model.ons)
+                |> IconToggle.setOnChange (Toggle "custom-icon-toggle-1")
+            )
+            { offIcon = IconToggle.icon "favorite_border"
+            , onIcon = IconToggle.icon "favorite"
+            }
+        , IconToggle.iconToggle
+            (IconToggle.config
+                |> IconToggle.setOn (Set.member "custom-icon-toggle-2" model.ons)
+                |> IconToggle.setOnChange (Toggle "custom-icon-toggle-2")
+            )
+            { offIcon =
+                IconToggle.customIcon Html.i
+                    [ class "fab fa-font-awesome-alt"
+                    , style "width" "24px"
+                    , style "text-align" "center"
+                    ]
+                    []
+            , onIcon =
+                IconToggle.customIcon Html.i
+                    [ class "fab fa-font-awesome"
+                    , style "width" "24px"
+                    , style "text-align" "center"
+                    ]
+                    []
+            }
+        , IconToggle.iconToggle
+            (IconToggle.config
+                |> IconToggle.setOn (Set.member "custom-icon-toggle-3" model.ons)
+                |> IconToggle.setOnChange (Toggle "custom-icon-toggle-3")
+            )
+            { offIcon =
+                IconToggle.svgIcon [ Svg.Attributes.viewBox "0 0 100 100" ] elmLogo
+            , onIcon =
+                IconToggle.svgIcon [ Svg.Attributes.viewBox "0 0 100 100" ] elmLogo
+            }
         , Html.h3 [ Typography.subtitle1 ] [ text "Focus Icon Button" ]
         , Html.div []
             [ IconButton.iconButton
@@ -118,8 +157,8 @@ view model =
                     |> IconToggle.setOnChange (Toggle "my-icon-toggle")
                     |> IconToggle.setAttributes [ Html.Attributes.id "my-icon-toggle" ]
                 )
-                { offIcon = "favorite_border"
-                , onIcon = "favorite"
+                { offIcon = IconToggle.icon "favorite_border"
+                , onIcon = IconToggle.icon "favorite"
                 }
             , text "\u{00A0}"
             , Button.raised
