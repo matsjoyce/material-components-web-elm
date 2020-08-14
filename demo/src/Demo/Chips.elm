@@ -289,7 +289,7 @@ filterChips2 model =
             FilterChip.chip
                 (FilterChip.config
                     |> FilterChip.setSelected (Set.member label model.contacts)
-                    |> FilterChip.setIcon (Just "face")
+                    |> FilterChip.setIcon (Just (FilterChip.icon "face"))
                     |> FilterChip.setOnChange (ContactChanged label)
                 )
                 label

@@ -62,7 +62,7 @@ import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
 import Json.Encode as Encode
-import Material.Chip.Filter.Internal as Chip exposing (Chip(..))
+import Material.Chip.Filter.Internal as Chip exposing (Chip(..), Icon(..))
 import Svg
 import Svg.Attributes
 
@@ -166,15 +166,12 @@ rippleElt =
 
 leadingIconElt : Chip.Config msg -> Maybe (Html msg)
 leadingIconElt (Chip.Config { icon, selected }) =
-    Maybe.map
-        (\iconName ->
-            Html.i
-                [ class "material-icons"
-                , class "mdc-chip__icon mdc-chip__icon--leading"
-                ]
-                [ text iconName ]
-        )
-        icon
+    case icon of
+        Just (Icon icon_) ->
+            Just (Html.map never icon_)
+
+        Nothing ->
+            Nothing
 
 
 checkmarkElt : Maybe (Html msg)
