@@ -6,6 +6,9 @@ module Material.Chip.Input exposing
     , setTrailingIcon
     , setAttributes
     , chip, Chip
+    , Icon, icon
+    , customIcon
+    , svgIcon
     )
 
 {-| Chips are compact elements that allow users to enter information, select a
@@ -21,7 +24,7 @@ into chips.
   - [Basic Usage](#basic-usage)
   - [Configuration](#configuration)
       - [Configuration Options](#configuration-options)
-  - [Input Chips](#input-chips)
+  - [Input Chip](#input-chip)
 
 
 # Resources
@@ -61,14 +64,27 @@ into chips.
 @docs setAttributes
 
 
-# Input Chips
+# Input Chip
 
 @docs chip, Chip
 
+
+# Input Chip with Custom Icon
+
+This library natively supports [Material Icons](https://material.io/icons).
+However, you may also include SVG or custom icons such as FontAwesome.
+
+@docs Icon, icon
+@docs customIcon
+@docs svgIcon
+
 -}
 
-import Html
-import Material.Chip.Input.Internal exposing (Chip(..), Config(..))
+import Html exposing (Html, text)
+import Html.Attributes exposing (class, style)
+import Material.Chip.Input.Internal exposing (Chip(..), Config(..), Icon(..))
+import Svg exposing (Svg)
+import Svg.Attributes
 
 
 {-| Configuration of an input chip
@@ -92,14 +108,14 @@ config =
 
 {-| Specify whether an input chip displays a leading icon
 -}
-setLeadingIcon : Maybe String -> Config msg -> Config msg
+setLeadingIcon : Maybe Icon -> Config msg -> Config msg
 setLeadingIcon leadingIcon (Config config_) =
     Config { config_ | leadingIcon = leadingIcon }
 
 
 {-| Specify whether an input chip displays a trailing icon
 -}
-setTrailingIcon : Maybe String -> Config msg -> Config msg
+setTrailingIcon : Maybe Icon -> Config msg -> Config msg
 setTrailingIcon trailingIcon (Config config_) =
     Config { config_ | trailingIcon = trailingIcon }
 
@@ -136,3 +152,74 @@ type alias Chip msg =
 chip : Config msg -> String -> Chip msg
 chip =
     Chip
+
+
+{-| Icon type
+-}
+type alias Icon =
+    Material.Chip.Input.Internal.Icon
+
+
+{-| Material Icon
+
+    ActionChip.chip
+        (ActionChip.config
+            |> ActionChip.setIcon (ActionChip.icon "favorite")
+        )
+        "Add to favorites"
+
+-}
+icon : String -> Icon
+icon iconName =
+    Icon Html.i
+        [ class "material-icons mdc-chip__icon mdc-chip__icon--leading" ]
+        [ text iconName ]
+
+
+{-| Custom icon
+
+    ActionChip.chip
+        (ActionChip.config
+            |> ActionChip.setIcon
+                (ActionChip.customIcon Html.i
+                    [ class "fab fa-font-awesome" ]
+                    []
+                )
+        )
+        "Font awesome"
+
+-}
+customIcon :
+    (List (Html.Attribute Never) -> List (Html Never) -> Html Never)
+    -> List (Html.Attribute Never)
+    -> List (Html Never)
+    -> Icon
+customIcon node additionalAttributes children =
+    Icon node
+        (class "mdc-chip__icon mdc-chip__icon--leading"
+            :: additionalAttributes
+        )
+        children
+
+
+{-| SVG icon
+
+    ActionChip.chip
+        (ActionChip.config
+            |> ActionChip.setIcon
+                (ActionChip.svgIcon
+                    [ Svg.Attributes.viewBox "…" ]
+                    [-- …
+                    ]
+                )
+        )
+        "Font awesome"
+
+-}
+svgIcon : List (Svg.Attribute Never) -> List (Svg Never) -> Icon
+svgIcon additionalAttributes children =
+    Icon Svg.svg
+        (Svg.Attributes.class "mdc-chip__icon mdc-chip__icon--leading"
+            :: additionalAttributes
+        )
+        children

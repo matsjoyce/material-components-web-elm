@@ -49,7 +49,8 @@ import Html.Events
 import Html.Keyed
 import Json.Decode as Decode
 import Json.Encode as Encode
-import Material.Chip.Input.Internal as Chip exposing (Chip(..))
+import Material.Chip.Input.Internal as Chip exposing (Chip(..), Icon(..))
+import Svg.Attributes
 
 
 {-| Input chip set view function
@@ -150,12 +151,36 @@ rippleElt =
 
 leadingIconElt : Chip.Config msg -> Maybe (Html msg)
 leadingIconElt (Chip.Config { leadingIcon }) =
-    Maybe.map
-        (\iconName ->
-            Html.i [ class "material-icons mdc-chip__icon mdc-chip__icon--leading" ]
-                [ text iconName ]
-        )
-        leadingIcon
+    Maybe.map (Html.map never) <|
+        case leadingIcon of
+            Just (Icon node attributes children) ->
+                Just <|
+                    node
+                        (attributes
+                            ++ [ class "material-icons"
+                               , class "mdc-chip__icon"
+                               , class "mdc-chip__icon--leading"
+                               , tabIndexProp -1
+                               , buttonRole
+                               ]
+                        )
+                        children
+
+            Just (SvgIcon node attributes children) ->
+                Just <|
+                    node
+                        (attributes
+                            ++ [ Svg.Attributes.class "material-icons"
+                               , Svg.Attributes.class "mdc-chip__icon"
+                               , Svg.Attributes.class "mdc-chip__icon--leading"
+                               , tabIndexProp -1
+                               , buttonRole
+                               ]
+                        )
+                        children
+
+            Nothing ->
+                Nothing
 
 
 primaryActionElt : String -> Maybe (Html msg)
@@ -177,14 +202,42 @@ touchElt =
 
 trailingIconElt : Chip.Config msg -> Maybe (Html msg)
 trailingIconElt (Chip.Config { trailingIcon, onDelete }) =
-    if onDelete /= Nothing then
-        Just <|
-            Html.i
-                [ class "material-icons mdc-chip__icon mdc-chip__icon--trailing"
-                , tabIndexProp -1
-                , buttonRole
-                ]
-                [ text (Maybe.withDefault "cancel" trailingIcon) ]
+    Maybe.map
+        (\_ ->
+            Html.map never <|
+                case trailingIcon of
+                    Just (Icon node attributes children) ->
+                        node
+                            (attributes
+                                ++ [ class "material-icons"
+                                   , class "mdc-chip__icon"
+                                   , class "mdc-chip__icon--trailing"
+                                   , tabIndexProp -1
+                                   , buttonRole
+                                   ]
+                            )
+                            children
 
-    else
-        Nothing
+                    Just (SvgIcon node attributes children) ->
+                        node
+                            (attributes
+                                ++ [ Svg.Attributes.class "material-icons"
+                                   , Svg.Attributes.class "mdc-chip__icon"
+                                   , Svg.Attributes.class "mdc-chip__icon--trailing"
+                                   , tabIndexProp -1
+                                   , buttonRole
+                                   ]
+                            )
+                            children
+
+                    Nothing ->
+                        Html.i
+                            [ class "material-icons"
+                            , class "mdc-chip__icon"
+                            , class "mdc-chip__icon--trailing"
+                            , tabIndexProp -1
+                            , buttonRole
+                            ]
+                            [ text "cancel" ]
+        )
+        onDelete
