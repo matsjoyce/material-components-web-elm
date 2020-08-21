@@ -212,16 +212,16 @@ customIcon node attributes nodes =
 
 {-| SVG icon
 
-    ActionChip.chip
-        (ActionChip.config
-            |> ActionChip.setIcon
-                (ActionChip.svgIcon
+    Tab.tab Tab.config
+        { label = "Tab"
+        , icon =
+            Just
+                (Tab.svgIcon
                     [ Svg.Attributes.viewBox "…" ]
                     [-- …
                     ]
                 )
-        )
-        "Font awesome"
+        }
 
 -}
 svgIcon : List (Svg.Attribute Never) -> List (Svg Never) -> Icon

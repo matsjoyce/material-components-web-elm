@@ -5,6 +5,9 @@ module Material.Fab exposing
     , setExited
     , setAttributes
     , fab
+    , Icon, icon
+    , customIcon
+    , svgIcon
     )
 
 {-| A floating action button represents the primary action in an application.
@@ -23,6 +26,7 @@ action button](Material-Fab-Extended).
   - [Floating Action Button](#floating-action-button)
   - [Mini FAB](#mini-fab)
   - [Exited FAB](#exited-fab)
+  - [FAB with Custom Icon](#fab-with-custom-icon)
   - [Focus a FAB](#focus-a-fab)
 
 
@@ -92,6 +96,16 @@ If you want the floating action button to transition off the screen, set its
     Fab.fab (Fab.config |> Fab.setExited True) "favorite"
 
 
+# FAB with Custom Icon
+
+This library natively supports [Material Icons](https://material.io/icons).
+However, you may also include SVG or custom icons such as FontAwesome.
+
+@docs Icon, icon
+@docs customIcon
+@docs svgIcon
+
+
 # Focus a FAB
 
 You may programatically focus a floating action button by assigning an id
@@ -110,6 +124,8 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
 import Json.Encode as Encode
+import Svg exposing (Svg)
+import Svg.Attributes
 
 
 {-| Floating action button configuration
@@ -165,8 +181,8 @@ setOnClick onClick (Config config_) =
 
 {-| Floating action button view function
 -}
-fab : Config msg -> String -> Html msg
-fab ((Config { additionalAttributes }) as config_) iconName =
+fab : Config msg -> Icon -> Html msg
+fab ((Config { additionalAttributes }) as config_) icon_ =
     Html.node "mdc-fab"
         (List.filterMap identity
             [ rootCs
@@ -178,7 +194,7 @@ fab ((Config { additionalAttributes }) as config_) iconName =
             ++ additionalAttributes
         )
         [ rippleElt
-        , iconElt iconName
+        , iconElt icon_
         ]
 
 
@@ -215,11 +231,75 @@ rippleElt =
     Html.div [ class "mdc-fab__ripple" ] []
 
 
-iconElt : String -> Html msg
-iconElt iconName =
-    Html.span [ class "material-icons", class "mdc-fab__icon" ] [ text iconName ]
+iconElt : Icon -> Html msg
+iconElt icon_ =
+    case icon_ of
+        Icon { node, attributes, nodes } ->
+            Html.map never (node (class "mdc-fab__icon" :: attributes) nodes)
+
+        SvgIcon { node, attributes, nodes } ->
+            Html.map never
+                (node (Svg.Attributes.class "mdc-fab__icon" :: attributes) nodes)
 
 
 clickHandler : Config msg -> Maybe (Html.Attribute msg)
 clickHandler (Config { onClick }) =
     Maybe.map Html.Events.onClick onClick
+
+
+{-| Icon type
+-}
+type Icon
+    = Icon
+        { node : List (Html.Attribute Never) -> List (Html Never) -> Html Never
+        , attributes : List (Html.Attribute Never)
+        , nodes : List (Html Never)
+        }
+    | SvgIcon
+        { node : List (Svg.Attribute Never) -> List (Svg Never) -> Svg Never
+        , attributes : List (Svg.Attribute Never)
+        , nodes : List (Svg Never)
+        }
+
+
+{-| Material Icon
+
+    Fab.fab Fab.config (Fab.icon "favorite")
+
+-}
+icon : String -> Icon
+icon iconName =
+    customIcon Html.i [ class "material-icons" ] [ text iconName ]
+
+
+{-| Custom icon
+
+    Fab.fab Fab.config
+        (Fab.customIcon Html.i
+            [ class "fab fa-font-awesome" ]
+            []
+        )
+
+-}
+customIcon :
+    (List (Html.Attribute Never) -> List (Html Never) -> Html Never)
+    -> List (Html.Attribute Never)
+    -> List (Html Never)
+    -> Icon
+customIcon node attributes nodes =
+    Icon { node = node, attributes = attributes, nodes = nodes }
+
+
+{-| SVG icon
+
+    Fab.fab Fab.config
+        (Fab.svgIcon
+            [ Svg.Attributes.viewBox "…" ]
+            [-- …
+            ]
+        )
+
+-}
+svgIcon : List (Svg.Attribute Never) -> List (Svg Never) -> Icon
+svgIcon attributes nodes =
+    SvgIcon { node = Svg.svg, attributes = attributes, nodes = nodes }
