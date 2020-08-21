@@ -54,13 +54,16 @@ view model =
         , Html.h3 [ Typography.subtitle1 ] [ text "Mini Floating Action Button" ]
         , Fab.fab (Fab.config |> Fab.setMini True) (Fab.icon "favorite_border")
         , Html.h3 [ Typography.subtitle1 ] [ text "Extended FAB" ]
-        , ExtendedFab.fab (ExtendedFab.config |> ExtendedFab.setIcon (Just "add"))
+        , ExtendedFab.fab
+            (ExtendedFab.config
+                |> ExtendedFab.setIcon (Just (ExtendedFab.icon "add"))
+            )
             "Create"
         , Html.h3 [ Typography.subtitle1 ]
             [ text "Extended FAB (Text label followed by icon)" ]
         , ExtendedFab.fab
             (ExtendedFab.config
-                |> ExtendedFab.setIcon (Just "add")
+                |> ExtendedFab.setIcon (Just (ExtendedFab.icon "add"))
                 |> ExtendedFab.setTrailingIcon True
             )
             "Create"
@@ -85,7 +88,10 @@ view model =
                         ]
                 )
                 (Fab.icon "favorite_border")
-            , ExtendedFab.fab (ExtendedFab.config |> ExtendedFab.setIcon (Just "add"))
+            , ExtendedFab.fab
+                (ExtendedFab.config
+                    |> ExtendedFab.setIcon (Just (ExtendedFab.icon "add"))
+                )
                 "Create"
             ]
         , Html.h3 [ Typography.subtitle1 ] [ text "FAB with Custom Icon" ]
@@ -95,6 +101,38 @@ view model =
         , text "\u{00A0}"
         , Fab.fab Fab.config
             (Fab.svgIcon [ Svg.Attributes.viewBox "0 0 100 100" ] elmLogo)
+        , Html.h3 [ Typography.subtitle1 ] [ text "Extended FAB with Custom Icon" ]
+        , ExtendedFab.fab
+            (ExtendedFab.config
+                |> ExtendedFab.setIcon
+                    (Just
+                        (ExtendedFab.icon "favorite_border")
+                    )
+            )
+            "Material Icons"
+        , text "\u{00A0}"
+        , ExtendedFab.fab
+            (ExtendedFab.config
+                |> ExtendedFab.setIcon
+                    (Just
+                        (ExtendedFab.customIcon Html.i
+                            [ class "fab fa-font-awesome" ]
+                            []
+                        )
+                    )
+            )
+            "Font Awesome"
+        , text "\u{00A0}"
+        , ExtendedFab.fab
+            (ExtendedFab.config
+                |> ExtendedFab.setIcon
+                    (Just
+                        (ExtendedFab.svgIcon [ Svg.Attributes.viewBox "0 0 100 100" ]
+                            elmLogo
+                        )
+                    )
+            )
+            "SVG"
         , Html.h3 [ Typography.subtitle1 ] [ text "Focus FAB" ]
         , Html.div [ style "display" "flex" ]
             [ Fab.fab
