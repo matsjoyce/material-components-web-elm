@@ -4,6 +4,9 @@ module Material.Tab exposing
     , setActive
     , setAttributes
     , Tab, tab, Content
+    , icon, Icon
+    , customIcon
+    , svgIcon
     )
 
 {-| Tabs organize and allow navigation between groups of content that are
@@ -22,6 +25,7 @@ the tab bar container, refer to [Material.TabBar](Material-TabBar).
       - [Configuration Options](#configuration-options)
   - [Tab](#tab)
   - [Active Tab](#active-tab)
+  - [Tab with Custom Icon](#tab-with-custom-icon)
 
 
 # Resources
@@ -75,6 +79,7 @@ the tab bar container, refer to [Material.TabBar](Material-TabBar).
 # Tab
 
 @docs Tab, tab, Content
+@docs icon, Icon
 
 
 # Active Tab
@@ -83,10 +88,22 @@ To mark a tab as active, set its `setActive` configuration option to `True`.
 
     Tab.tab (Tab.config |> Tab.setActive True)
 
+
+# Tab with Custom Icon
+
+This library natively supports [Material Icon](https://material.io/icons),
+however you may also include SVG or custom icons such as FontAwesome.
+
+@docs customIcon
+@docs svgIcon
+
 -}
 
-import Html
-import Material.Tab.Internal exposing (Config(..), Tab(..))
+import Html exposing (Html, text)
+import Html.Attributes exposing (class)
+import Material.Tab.Internal exposing (Config(..), Icon(..), Tab(..))
+import Svg exposing (Svg)
+import Svg.Attributes
 
 
 {-| Configuration of a tab
@@ -132,7 +149,7 @@ setAttributes additionalAttributes (Config config_) =
 -}
 type alias Content =
     { label : String
-    , icon : Maybe String
+    , icon : Maybe Icon
     }
 
 
@@ -150,3 +167,63 @@ type alias Tab msg =
 tab : Config msg -> Content -> Tab msg
 tab (Config config_) content =
     Tab (Config { config_ | content = content })
+
+
+{-| Icon type
+-}
+type alias Icon =
+    Material.Tab.Internal.Icon
+
+
+{-| Material Icon
+
+    Tab.tab Tab.config
+        { label = "Add to favorites"
+        , icon = Just (Tab.icon "favorite")
+        }
+
+-}
+icon : String -> Icon
+icon iconName =
+    customIcon Html.i [ class "material-icons" ] [ text iconName ]
+
+
+{-| Custom icon
+
+    Tab.bar Tab.config
+        { label = "Font Awesome"
+        , icon =
+            Just
+                (Tab.customIcon Html.i
+                    [ class "fab fa-font-awesome" ]
+                    []
+                )
+        }
+
+-}
+customIcon :
+    (List (Html.Attribute Never) -> List (Html Never) -> Html Never)
+    -> List (Html.Attribute Never)
+    -> List (Html Never)
+    -> Icon
+customIcon node attributes nodes =
+    Icon { node = node, attributes = attributes, nodes = nodes }
+
+
+{-| SVG icon
+
+    ActionChip.chip
+        (ActionChip.config
+            |> ActionChip.setIcon
+                (ActionChip.svgIcon
+                    [ Svg.Attributes.viewBox "…" ]
+                    [-- …
+                    ]
+                )
+        )
+        "Font awesome"
+
+-}
+svgIcon : List (Svg.Attribute Never) -> List (Svg Never) -> Icon
+svgIcon attributes nodes =
+    SvgIcon { node = Svg.svg, attributes = attributes, nodes = nodes }
