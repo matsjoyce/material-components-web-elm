@@ -49,6 +49,7 @@
             "Material.TabBar",
             "Material.TextArea",
             "Material.TextField",
+            "Material.TextField.Icon",
             "Material.Theme",
             "Material.TopAppBar",
             "Material.Typography"

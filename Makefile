@@ -56,7 +56,7 @@ commit-pages: build-pages
 
 
 docs: node_modules
-	elm-doc-preview
+	elm-doc-preview --port 8001
 
 
 release: distclean build-pages build-examples build-docs do-review do-checks
