@@ -13,6 +13,7 @@ module Material.Snackbar exposing
     , setLeading
     , setStacked
     , setTimeoutMs
+    , map
     , Icon, icon
     , customIcon
     , svgIcon
@@ -166,6 +167,7 @@ At the minimum, a message contains only a label.
 @docs setLeading
 @docs setStacked
 @docs setTimeoutMs
+@docs map
 
 
 ## Message with Action Button
@@ -454,6 +456,29 @@ message label =
         , timeoutMs = Just 5000
         }
 
+
+{-| Transform the messages produced by a message
+-}
+map : (a -> b) -> Message a -> Message b
+map f (Message message_) =
+    let
+        mapIcon i =
+            case i of
+                Icon {node, attributes, nodes} ->
+                    customIcon Html.i [] [node attributes nodes |> Html.map f]
+                SvgIcon {node, attributes, nodes} ->
+                    customIcon Html.i [] [node attributes nodes |> Html.map f]
+    in
+    Message
+        { label = message_.label
+        , actionButton = message_.actionButton
+        , onActionButtonClick = Maybe.map (\x -> x >> f) message_.onActionButtonClick
+        , actionIcon = Maybe.map mapIcon message_.actionIcon
+        , onActionIconClick = Maybe.map (\x -> x >> f) message_.onActionIconClick
+        , leading = message_.leading
+        , stacked = message_.stacked
+        , timeoutMs = message_.timeoutMs
+        }
 
 rootCs : Maybe (Html.Attribute msg)
 rootCs =
